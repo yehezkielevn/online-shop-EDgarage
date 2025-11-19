@@ -1,43 +1,32 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source "../**/*.blade.php";
-@source "../**/*.js";
-@source "../**/*.vue";
+/* ====== Custom minimal biar mirip versi lama ====== */
 
-@theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Font default agar sama seperti sebelumnya */
+@layer base {
+  body {
+    @apply font-sans text-gray-800 bg-white;
+  }
 }
 
-/* Navbar Link Animations - Sesuai gambar contoh */
-.nav-link {
-    position: relative;
-    display: inline-block;
-    padding-bottom: 2px;
-    transition: color 0.3s ease;
-}
+/* Navbar link animation */
+@layer components {
+  .nav-link {
+    @apply relative inline-block pb-1 text-gray-700 transition-colors duration-300 ease-in-out;
+  }
 
-.nav-link::after {
+  .nav-link::after {
     content: "";
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 2px;
-    background-color: #e50914;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-}
+    @apply absolute left-0 bottom-0 w-full h-[2px] bg-[#e50914] scale-x-0 origin-left transition-transform duration-300 ease-in-out;
+  }
 
-.nav-link:hover::after,
-.nav-link:focus::after {
-    transform: scaleX(1);
-}
+  .nav-link:hover::after,
+  .nav-link:focus::after {
+    @apply scale-x-100;
+  }
 
-.nav-link:focus {
+  .nav-link:focus {
     outline: 2px solid rgba(229, 9, 20, 0.2);
     outline-offset: 3px;
+  }
 }

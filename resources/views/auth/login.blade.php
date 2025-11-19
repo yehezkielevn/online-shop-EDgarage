@@ -53,9 +53,7 @@
             </button>
         </form>
 
-        <div class="mt-6 text-center text-sm text-gray-600">
-            <p>Default: admin@edgarage.com / password123</p>
-        </div>
+        
     </div>
 
     <script>

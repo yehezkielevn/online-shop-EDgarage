@@ -1,76 +1,55 @@
-@extends('layouts.admin')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Motor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
 
-@section('content')
-<div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Edit Motor</h1>
-</div>
+    <div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
 
-<div class="bg-white rounded-lg shadow-md p-6">
-    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Nama Motor *</label>
-                <input type="text" name="nama_motor" value="{{ old('nama_motor', $product->nama_motor) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Merek *</label>
-                <input type="text" name="merek" value="{{ old('merek', $product->merek) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Tahun *</label>
-                <input type="number" name="tahun" value="{{ old('tahun', $product->tahun) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Warna *</label>
-                <input type="text" name="warna" value="{{ old('warna', $product->warna) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Harga (Rp) *</label>
-                <input type="number" name="harga" value="{{ old('harga', $product->harga) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Kilometer *</label>
-                <input type="number" name="kilometer" value="{{ old('kilometer', $product->kilometer) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Plat Nomor *</label>
-                <input type="text" name="plat_nomor" value="{{ old('plat_nomor', $product->plat_nomor) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Status Surat *</label>
-                <input type="text" name="status_surat" value="{{ old('status_surat', $product->status_surat) }}" required class="w-full px-4 py-2 border rounded-lg">
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Status Pajak *</label>
-                <select name="status_pajak" required class="w-full px-4 py-2 border rounded-lg">
-                    <option value="Masih berlaku" {{ $product->status_pajak === 'Masih berlaku' ? 'selected' : '' }}>Masih berlaku</option>
-                    <option value="Habis" {{ $product->status_pajak === 'Habis' ? 'selected' : '' }}>Habis</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-gray-700 text-sm font-medium mb-2">Minus</label>
-                <textarea name="minus" class="w-full px-4 py-2 border rounded-lg">{{ old('minus', $product->minus) }}</textarea>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block text-gray-700 text-sm font-medium mb-2">Gambar (untuk mengganti, upload gambar baru)</label>
-                @if($product->gambar)
-                    <div class="mb-2 flex gap-2 flex-wrap">
-                        @foreach($product->gambar as $img)
-                            <img src="{{ asset('storage/' . $img) }}" alt="Gambar" class="w-20 h-20 object-cover rounded">
-                        @endforeach
-                    </div>
-                @endif
-                <input type="file" name="gambar[]" multiple accept="image/*" class="w-full px-4 py-2 border rounded-lg">
-            </div>
-        </div>
-        <div class="mt-6 flex gap-4">
-            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg">Update</button>
-            <a href="{{ route('admin.products.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">Batal</a>
-        </div>
-    </form>
-</div>
-@endsection
+        <h2 class="text-2xl font-bold mb-4">Edit Motor</h2>
 
+        <form action="{{ route('motor.update', $motor->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
+            <label class="block mt-3 font-semibold">Nama Motor</label>
+            <input type="text" name="nama"
+                   class="w-full p-2 border rounded-lg"
+                   value="{{ $motor->nama }}" required>
+
+            <label class="block mt-3 font-semibold">Harga</label>
+            <input type="number" name="harga"
+                   class="w-full p-2 border rounded-lg"
+                   value="{{ $motor->harga }}" required>
+
+            <label class="block mt-3 font-semibold">Tahun</label>
+            <input type="number" name="tahun"
+                   class="w-full p-2 border rounded-lg"
+                   value="{{ $motor->tahun }}" required>
+
+            <label class="block mt-3 font-semibold">Deskripsi</label>
+            <textarea name="deskripsi"
+                      class="w-full p-2 border rounded-lg" required>{{ $motor->deskripsi }}</textarea>
+
+            <label class="block mt-3 font-semibold">Gambar Sekarang:</label>
+            <img src="{{ asset('storage/' . $motor->gambar) }}"
+                 class="w-32 h-32 object-cover rounded-md mb-3">
+
+            <label class="block mt-3 font-semibold">Ganti Gambar</label>
+            <input type="file" name="gambar"
+                   class="w-full p-2 border rounded-lg">
+
+            <button class="w-full mt-5 bg-yellow-600 text-white p-2 rounded-lg hover:bg-yellow-700">
+                Update
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

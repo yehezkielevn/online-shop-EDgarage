@@ -15,8 +15,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminSeeder::class,
+            UserDemoSeeder::class,
             ProductSeeder::class,
             TransactionSeeder::class,
+            // Motor catalog seed
+            \Database\Seeders\MotorSeeder::class,
         ]);
     }
 }
