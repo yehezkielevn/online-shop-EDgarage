@@ -1,45 +1,53 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\MotorController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KatalogController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
-// Homepage
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// ======== HALAMAN USER ========
+
+// Homepage + katalog (filter berada di bagian bawah homepage)
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/katalog/{motor}', [MotorController::class, 'show'])->name('katalog.show');
 
-// Authentication Routes
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-// Register
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register.show');
-Route::post('/register', [AuthController::class, 'register'])->name('register.perform');
+// Detail produk
+Route::get('/katalog/{id}', [KatalogController::class, 'show'])->name('katalog.show');
 
-// Admin Routes (Protected by auth and isAdmin middleware)
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
+
+// ======== AUTH ========
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+// ======== ADMIN (HARUS LOGIN) ========
+
+Route::middleware(['auth'])->group(function () {
+
+    // Dashboard admin
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    
-    // Products (Motor)
-    Route::resource('products', ProductController::class);
-    
-    // Transactions
-    Route::resource('transactions', TransactionController::class);
-    
-    // Users
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // CRUD Produk
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
+
+    Route::get('/products/edit/{id}', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
+
+    Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 });

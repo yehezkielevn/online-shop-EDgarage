@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,7 +11,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $products = Product::with('images')->latest()->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
@@ -22,29 +23,36 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_motor' => 'required|string|max:255',
-            'merek' => 'required|string|max:255',
-            'tahun' => 'required|integer|min:1900|max:' . date('Y'),
-            'warna' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
-            'kilometer' => 'required|integer|min:0',
-            'plat_nomor' => 'required|string|max:20',
+            'nama_motor'   => 'required|string|max:255',
+            'merek'        => 'required|string|max:255',
+            'tipe'         => 'nullable|string|in:sport,manual,matic', // 🔥 DITAMBAHKAN
+            'tahun'        => 'required|integer|min:1900|max:' . date('Y'),
+            'warna'        => 'required|string|max:255',
+            'harga'        => 'required|numeric|min:0',
+            'kilometer'    => 'required|integer|min:0',
+            'plat_nomor'   => 'required|string|max:20',
             'status_surat' => 'required|string',
             'status_pajak' => 'required|string',
-            'minus' => 'nullable|string',
-            'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'minus'        => 'nullable|string',
+
+            'images.*'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
-        // Upload gambar
-        $gambarPaths = [];
-        if ($request->hasFile('gambar')) {
-            foreach ($request->file('gambar') as $file) {
-                $gambarPaths[] = $file->store('products', 'public');
+        // Simpan produk
+        $product = Product::create($validated);
+
+        // Simpan gambar
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('products', 'public');
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path'       => $path,
+                    'order'      => $index,
+                ]);
             }
         }
-        $validated['gambar'] = $gambarPaths;
-
-        Product::create($validated);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Motor berhasil ditambahkan!');
@@ -52,50 +60,62 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load('images');
         return view('admin.products.show', compact('product'));
     }
 
     public function edit(Product $product)
     {
+        $product->load('images');
         return view('admin.products.edit', compact('product'));
     }
 
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'nama_motor' => 'required|string|max:255',
-            'merek' => 'required|string|max:255',
-            'tahun' => 'required|integer|min:1900|max:' . date('Y'),
-            'warna' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
-            'kilometer' => 'required|integer|min:0',
-            'plat_nomor' => 'required|string|max:20',
+            'nama_motor'   => 'required|string|max:255',
+            'merek'        => 'required|string|max:255',
+            'tipe'         => 'nullable|string|in:sport,manual,matic', // 🔥 DITAMBAHKAN
+            'tahun'        => 'required|integer|min:1900|max:' . date('Y'),
+            'warna'        => 'required|string|max:255',
+            'harga'        => 'required|numeric|min:0',
+            'kilometer'    => 'required|integer|min:0',
+            'plat_nomor'   => 'required|string|max:20',
             'status_surat' => 'required|string',
             'status_pajak' => 'required|string',
-            'minus' => 'nullable|string',
-            'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'minus'        => 'nullable|string',
+
+            'images.*'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'delete_images'=> 'nullable|array',
         ]);
 
-        // Handle gambar baru
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
-            if ($product->gambar) {
-                foreach ($product->gambar as $oldImage) {
-                    Storage::disk('public')->delete($oldImage);
+        // Update data
+        $product->update($validated);
+
+        // Hapus gambar terpilih
+        if ($request->delete_images) {
+            foreach ($request->delete_images as $imageId) {
+                $img = ProductImage::find($imageId);
+                if ($img) {
+                    Storage::disk('public')->delete($img->path);
+                    $img->delete();
                 }
             }
-            
-            // Upload gambar baru
-            $gambarPaths = [];
-            foreach ($request->file('gambar') as $file) {
-                $gambarPaths[] = $file->store('products', 'public');
-            }
-            $validated['gambar'] = $gambarPaths;
-        } else {
-            $validated['gambar'] = $product->gambar;
         }
 
-        $product->update($validated);
+        // Upload gambar baru
+        if ($request->hasFile('images')) {
+            $lastOrder = ProductImage::where('product_id', $product->id)->max('order') ?? 0;
+
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('products', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path'       => $path,
+                    'order'      => $lastOrder + $index + 1,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Motor berhasil diperbarui!');
@@ -103,11 +123,9 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // Hapus gambar
-        if ($product->gambar) {
-            foreach ($product->gambar as $image) {
-                Storage::disk('public')->delete($image);
-            }
+        foreach ($product->images as $img) {
+            Storage::disk('public')->delete($img->path);
+            $img->delete();
         }
 
         $product->delete();
