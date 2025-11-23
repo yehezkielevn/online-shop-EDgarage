@@ -2,119 +2,119 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\LoginActivity;
 
 class AuthController extends Controller
 {
-    // ================================
-    // SHOW LOGIN
-    // ================================
+    // --- VIEW ---
     public function showLogin()
     {
         if (Auth::check()) {
-            if (Auth::user()->role === 'admin') {
-                return redirect('/admin/dashboard');
-            }
-            return redirect('/');
+            return $this->redirectBasedOnRole();
         }
-
-        return redirect()->route('home', ['login' => 1]);
+        return view('auth.login');
     }
 
-    // ================================
-    // SHOW REGISTER
-    // ================================
     public function showRegister()
     {
         if (Auth::check()) {
-            if (Auth::user()->role === 'admin') {
-                return redirect('/admin/dashboard');
-            }
-            return redirect('/');
+            return $this->redirectBasedOnRole();
         }
-
         return view('auth.register');
     }
 
-    // ================================
-    // REGISTER USER / ADMIN PERTAMA
-    // ================================
+    // --- PROCESS ---
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'nomor_hp' => 'nullable|string|max:20',
-            'password' => 'required|confirmed|min:6',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|unique:users,email',
+            'nomor_hp'  => 'required|string|max:20', // Wajib ada
+            'alamat'    => 'required|string',         // Wajib ada
+            'password'  => 'required|confirmed|min:6',
         ]);
 
-        // User pertama otomatis admin
-        $isFirstAdmin = User::where('role', 'admin')->count() === 0;
+        // Cek Admin Pertama
+        $isFirstAdmin = User::count() === 0;
 
+        // Simpan User
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'nomor_hp' => $validated['nomor_hp'] ?? null,
-            'password' => Hash::make($validated['password']),
-            'role' => $isFirstAdmin ? 'admin' : 'user',
+            'name'      => $validated['name'],
+            'email'     => $validated['email'],
+            'nomor_hp'  => $validated['nomor_hp'],
+            'alamat'    => $validated['alamat'],
+            'password'  => Hash::make($validated['password']),
+            'role'      => $isFirstAdmin ? 'admin' : 'user',
+            'is_admin'  => $isFirstAdmin ? true : false,
         ]);
 
-        // Login otomatis setelah register
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        // Jika admin pertama → dashboard
-        if ($user->role === 'admin') {
-            return redirect('/admin/dashboard')
-                ->with('success', 'Akun admin berhasil dibuat. Selamat datang, ' . $user->name . '!');
-        }
-
-        // Selain itu → ke homepage
-        return redirect()->route('home')
-            ->with('success', 'Pendaftaran berhasil! Selamat datang, ' . $user->name . '!');
+        // --- MODIFIKASI: JANGAN LOGIN OTOMATIS ---
+        // Auth::login($user); <--- KITA HAPUS INI
+        
+        // Redirect ke Halaman Login dengan Pesan Sukses
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login dengan akun baru Anda.');
     }
 
-    // ================================
-    // LOGIN
-    // ================================
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            // Regenerate session ID untuk keamanan
+            $request->session()->regenerate(); 
+            
+            $user = User::find(Auth::id());
+            
+            // Catat Log
+            $this->logActivity($user);
 
-            // Admin → dashboard
-            if (Auth::user()->role === 'admin') {
-                return redirect('/admin/dashboard')
-                    ->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
-            }
-
-            // User → homepage
-            return redirect()->route('home')
-                ->with('success', 'Berhasil login sebagai pengguna.');
+            // Redirect sesuai role
+            return $this->redirectBasedOnRole($user)->with('success', 'Berhasil login.');
         }
 
-        return redirect()->route('home')
-            ->withErrors(['email' => 'Email atau password salah.'])
-            ->withInput($request->only('email'))
-            ->with('open_login', true);
+        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
     }
 
-    // ================================
-    // LOGOUT
-    // ================================
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect('/')->with('success', 'Anda telah logout.');
+    }
+
+    // --- HELPER FUNCTIONS ---
+    private function logActivity($user)
+    {
+        try {
+            LoginActivity::create([
+                'user_id'   => $user->id,
+                'name'      => $user->name,
+                'email'     => $user->email,
+                'role'      => $user->role,
+                'login_at'  => now(),
+            ]);
+        } catch (\Exception $e) {
+            // Silent fail
+        }
+    }
+
+    private function redirectBasedOnRole($user = null)
+    {
+        $user = $user ?? Auth::user();
+
+        // Logika Cek Admin yang Kuat
+        if ($user->is_admin || strtolower(trim($user->role)) === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('home');
     }
 }

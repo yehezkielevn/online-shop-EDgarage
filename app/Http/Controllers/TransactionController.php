@@ -2,80 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
-use App\Models\Product;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Transaction; // Panggil Model Asli
 
 class TransactionController extends Controller
 {
+    // TAMPILKAN SEMUA TRANSAKSI
     public function index()
     {
+        // Ambil data real dari tabel transactions, gabungkan dengan user & product
+        // Urutkan dari yang terbaru, batasi 10 per halaman
         $transactions = Transaction::with(['user', 'product'])
-            ->latest()
-            ->paginate(15);
+                            ->latest()
+                            ->paginate(10);
+
         return view('admin.transactions.index', compact('transactions'));
     }
 
-    public function create()
+    // UPDATE STATUS TRANSAKSI (REAL)
+    public function update(Request $request, $id)
     {
-        $users = User::where('is_admin', false)->get();
-        $products = Product::all();
-        return view('admin.transactions.create', compact('users', 'products'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'product_id' => 'required|exists:products,id',
-            'metode_pembayaran' => 'required|in:Transfer Bank,E-Wallet,Cashless',
-            'status_pembayaran' => 'required|in:pending,success,failed',
-            'tanggal_transaksi' => 'required|date',
-            'total_price' => 'required|numeric|min:0',
+        $request->validate([
+            'status_pembayaran' => 'required|in:pending,success,failed'
         ]);
 
-        Transaction::create($validated);
-
-        return redirect()->route('admin.transactions.index')
-            ->with('success', 'Transaksi berhasil ditambahkan!');
-    }
-
-    public function show(Transaction $transaction)
-    {
-        $transaction->load(['user', 'product']);
-        return view('admin.transactions.show', compact('transaction'));
-    }
-
-    public function edit(Transaction $transaction)
-    {
-        $users = User::where('is_admin', false)->get();
-        $products = Product::all();
-        return view('admin.transactions.edit', compact('transaction', 'users', 'products'));
-    }
-
-    public function update(Request $request, Transaction $transaction)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'product_id' => 'required|exists:products,id',
-            'metode_pembayaran' => 'required|in:Transfer Bank,E-Wallet,Cashless',
-            'status_pembayaran' => 'required|in:pending,success,failed',
-            'tanggal_transaksi' => 'required|date',
-            'total_price' => 'required|numeric|min:0',
+        $transaction = Transaction::findOrFail($id);
+        
+        $transaction->update([
+            'status_pembayaran' => $request->status_pembayaran
         ]);
 
-        $transaction->update($validated);
-
-        return redirect()->route('admin.transactions.index')
-            ->with('success', 'Transaksi berhasil diperbarui!');
+        return back()->with('success', 'Status transaksi berhasil diperbarui.');
     }
 
-    public function destroy(Transaction $transaction)
+    // HAPUS TRANSAKSI (REAL)
+    public function destroy($id)
     {
+        $transaction = Transaction::findOrFail($id);
         $transaction->delete();
 
-        return redirect()->route('admin.transactions.index')
-            ->with('success', 'Transaksi berhasil dihapus!');
+        return back()->with('success', 'Data transaksi berhasil dihapus.');
     }
 }

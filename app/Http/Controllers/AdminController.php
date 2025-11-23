@@ -2,57 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Transaction;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Product;
+use App\Models\Transaction;   // Panggil Model Transaction Asli
+use App\Models\LoginActivity; // Panggil Model Activity Asli
 
 class AdminController extends Controller
 {
     public function index()
     {
+        // 1. HITUNG TOTAL DATA (REAL DARI DB)
         $totalProducts = Product::count();
-        $totalUsers = User::count();
-        $totalTransactions = Transaction::count();
-        
-        // Ambil 5 transaksi terbaru
-        $recentTransactions = Transaction::with(['user', 'product'])
-            ->latest()
-            ->take(5)
-            ->get();
+        $totalUsers = User::where('role', '!=', 'admin')->count();
+        $totalTransactions = Transaction::count(); 
 
-        // Data untuk grafik penjualan (7 hari terakhir)
-        $salesData = [];
-        $labels = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
-            $dateStr = $date->format('Y-m-d');
-            $labels[] = $date->format('d M');
-            
-            $total = Transaction::whereDate('tanggal_transaksi', $dateStr)
-                ->where('status_pembayaran', 'success')
-                ->sum('total_price');
-            
-            // Pastikan nilai selalu numeric
-            $salesData[] = is_numeric($total) ? (float) $total : 0.0;
-        }
-        
-        // Pastikan selalu ada 7 data
-        while (count($labels) < 7) {
-            $labels[] = now()->subDays(7 - count($labels))->format('d M');
-        }
-        while (count($salesData) < 7) {
-            $salesData[] = 0.0;
-        }
+        // 2. AMBIL RIWAYAT LOGIN (REAL DARI DB)
+        // Mengambil 5 login terakhir
+        $loginActivities = LoginActivity::latest()->take(5)->get();
+
+        // 3. AMBIL TRANSAKSI TERBARU (REAL DARI DB)
+        // Mengambil 5 transaksi terakhir beserta data user dan produknya
+        $recentTransactions = Transaction::with(['user', 'product'])
+                                ->latest()
+                                ->take(5)
+                                ->get();
 
         return view('admin.dashboard', compact(
-            'totalProducts',
-            'totalUsers',
-            'totalTransactions',
+            'totalProducts', 
+            'totalUsers', 
+            'totalTransactions', 
             'recentTransactions',
-            'salesData',
-            'labels'
+            'loginActivities'
         ));
     }
-}
 
+    // Halaman Log Aktivitas Lengkap
+    public function activityLogs()
+    {
+        $activities = LoginActivity::latest()->paginate(20);
+        return view('admin.activity_logs.index', compact('activities'));
+    }
+}

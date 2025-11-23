@@ -1,260 +1,128 @@
 @extends('layouts.admin')
 
+@section('title', 'Dashboard - E&Dgarage')
+@section('header-title', 'Dashboard Overview')
+
 @section('content')
-    <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Total Produk Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg hover:border-red-600/50 transition-colors">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-1">Total Produk</p>
-                    <p class="text-3xl font-bold text-gray-800">{{ $totalProducts }}</p>
+                    <p class="text-gray-400 text-sm mb-1">Total Produk</p>
+                    <p class="text-3xl font-bold text-white">{{ $totalProducts }} <span class="text-sm font-normal text-gray-500">Unit</span></p>
                 </div>
-                <div class="bg-blue-100 rounded-full p-4">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
+                <div class="p-3 bg-blue-900/20 rounded-lg text-blue-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
             </div>
         </div>
 
-        <!-- Total Pengguna Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg hover:border-red-600/50 transition-colors">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-1">Total Pengguna</p>
-                    <p class="text-3xl font-bold text-gray-800">{{ $totalUsers }}</p>
+                    <p class="text-gray-400 text-sm mb-1">Pengguna Terdaftar</p>
+                    <p class="text-3xl font-bold text-white">{{ $totalUsers }} <span class="text-sm font-normal text-gray-500">Akun</span></p>
                 </div>
-                <div class="bg-green-100 rounded-full p-4">
-                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
+                <div class="p-3 bg-green-900/20 rounded-lg text-green-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </div>
             </div>
         </div>
 
-        <!-- Total Transaksi Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg hover:border-red-600/50 transition-colors">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-1">Total Transaksi</p>
-                    <p class="text-3xl font-bold text-gray-800">{{ $totalTransactions }}</p>
+                    <p class="text-gray-400 text-sm mb-1">Total Transaksi</p>
+                    <p class="text-3xl font-bold text-white">{{ $totalTransactions }} <span class="text-sm font-normal text-gray-500">Order</span></p>
                 </div>
-                <div class="bg-orange-100 rounded-full p-4">
-                    <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
+                <div class="p-3 bg-red-900/20 rounded-lg text-red-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Transaksi Terbaru Table -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Transaksi Terbaru</h3>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Transaksi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pembeli</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($recentTransactions as $transaction)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ str_pad($transaction->id, 6, '0', STR_PAD_LEFT) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $transaction->user->name ?? 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $transaction->product->nama_motor ?? 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                @if($transaction->tanggal_transaksi)
-                                    {{ $transaction->tanggal_transaksi->format('d M Y') }}
-                                @else
-                                    {{ $transaction->created_at->format('d M Y') }}
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @php
-                                    $statusColors = [
-                                        'pending' => 'bg-yellow-100 text-yellow-800',
-                                        'success' => 'bg-green-100 text-green-800',
-                                        'failed' => 'bg-red-100 text-red-800',
-                                    ];
-                                    $statusColor = $statusColors[$transaction->status_pembayaran] ?? 'bg-gray-100 text-gray-800';
-                                @endphp
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusColor }}">
-                                    {{ ucfirst($transaction->status_pembayaran ?? 'pending') }}
-                                </span>
-                            </td>
-                        </tr>
-                    @empty
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700">
+            <div class="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-white">Riwayat Login Terakhir</h3>
+                <span class="text-xs text-gray-500">Realtime</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="bg-gray-900/50">
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-                                <div class="flex flex-col items-center">
-                                    <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
-                                    <p class="text-sm">Belum ada transaksi</p>
-                                </div>
-                            </td>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">User</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">Role</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">Waktu</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="bg-gray-800 divide-y divide-gray-700">
+                        @forelse($loginActivities ?? [] as $log)
+                            <tr class="hover:bg-gray-700/50 transition-colors">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-white">{{ $log->name }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-xs">
+                                    <span class="px-2 py-1 rounded-full {{ $log->role == 'admin' ? 'bg-red-900/30 text-red-400 border border-red-800' : 'bg-blue-900/30 text-blue-400 border border-blue-800' }}">
+                                        {{ ucfirst($log->role) }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-400">
+                                    {{ \Carbon\Carbon::parse($log->login_at)->diffForHumans() }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500">Belum ada aktivitas login.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!-- Grafik Penjualan -->
-    <div class="bg-white rounded-lg shadow-md p-6 mt-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Grafik Penjualan 7 Hari Terakhir</h3>
-        <div style="height: 300px; position: relative;">
-            <canvas id="salesChart"></canvas>
+        <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700">
+            <div class="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-white">Transaksi Terbaru</h3>
+                <a href="{{ route('admin.transactions.index') }}" class="text-xs text-red-500 hover:text-red-400 hover:underline">Lihat Semua</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="bg-gray-900/50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">User</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">Produk</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-gray-800 divide-y divide-gray-700">
+                        @forelse($recentTransactions as $trx)
+                            <tr class="hover:bg-gray-700/50 transition-colors">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-white">{{ $trx->user->name ?? 'Deleted' }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{{ $trx->product->nama_motor ?? 'Deleted' }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    @php
+                                        $color = match($trx->status_pembayaran) {
+                                            'success' => 'text-green-400',
+                                            'pending' => 'text-yellow-400',
+                                            'failed' => 'text-red-400',
+                                            default => 'text-gray-400'
+                                        };
+                                    @endphp
+                                    <span class="text-xs font-bold {{ $color }}">
+                                        {{ ucfirst($trx->status_pembayaran) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500">Belum ada data transaksi.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
 @endsection
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" onerror="console.error('Chart.js failed to load')"></script>
-<script>
-    // Tunggu sampai Chart.js ter-load
-    function initChart() {
-        const ctx = document.getElementById('salesChart');
-        if (!ctx) {
-            console.error('Canvas element not found');
-            return;
-        }
-        
-        if (typeof Chart === 'undefined') {
-            console.error('Chart.js not loaded');
-            ctx.parentElement.innerHTML = '<div class="text-center text-gray-500 py-8">Grafik tidak dapat dimuat. Silakan refresh halaman.</div>';
-            return;
-        }
-        
-        const labels = @json($labels ?? []);
-        const salesData = @json($salesData ?? []);
-        
-        // Pastikan data valid (minimal 1 data)
-        if (labels && Array.isArray(labels) && salesData && Array.isArray(salesData) && labels.length === salesData.length) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Total Penjualan (Rp)',
-                            data: salesData,
-                            borderColor: 'rgb(249, 115, 22)',
-                            backgroundColor: 'rgba(249, 115, 22, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            pointRadius: 5,
-                            pointHoverRadius: 7
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const value = context.parsed.y || 0;
-                                        return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                // Jika tidak ada data atau data tidak valid, buat chart dengan data default
-                const defaultLabels = (labels && Array.isArray(labels) && labels.length > 0) ? labels : ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-                const defaultData = (salesData && Array.isArray(salesData) && salesData.length > 0) ? salesData : [0, 0, 0, 0, 0, 0, 0];
-                
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: defaultLabels,
-                        datasets: [{
-                            label: 'Total Penjualan (Rp)',
-                            data: defaultData,
-                            borderColor: 'rgb(249, 115, 22)',
-                            backgroundColor: 'rgba(249, 115, 22, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const value = context.parsed.y || 0;
-                                        return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }
-    
-    // Tunggu Chart.js ter-load dengan retry
-    function waitForChart() {
-        if (typeof Chart !== 'undefined') {
-            initChart();
-        } else {
-            // Retry setelah 100ms
-            setTimeout(waitForChart, 100);
-        }
-    }
-    
-    // Mulai pengecekan
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', waitForChart);
-    } else {
-        waitForChart();
-    }
-</script>
-@endpush
-

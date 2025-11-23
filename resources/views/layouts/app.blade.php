@@ -1,54 +1,34 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>{{ $title ?? 'E&Dgarage' }}</title>
 
-    {{-- Fonts --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    {{-- Tailwind / Vite --}}
-    @if(file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css','resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-    @endif
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
 </head>
 
-<body class="bg-black text-white font-poppins">
+<body class="bg-black text-white font-poppins antialiased flex flex-col min-h-screen">
 
-    {{-- MAIN CONTENT --}}
-    <main>
+    @include('sections.navbar')
+
+    <main class="flex-grow pt-20">
         @yield('content')
     </main>
-
-    {{-- Slideshow Script --}}
-    <script>
-    document.addEventListener('DOMContentLoaded', function(){
-        document.querySelectorAll('img[data-images]').forEach(function(img){
-            const images = JSON.parse(img.getAttribute('data-images') || '[]');
-            if (!images.length) return;
-
-            let idx = 0;
-
-            setInterval(function(){
-                idx = (idx + 1) % images.length;
-
-                img.style.opacity = 0;
-
-                setTimeout(function(){
-                    img.src = images[idx];
-                    img.style.opacity = 1;
-                }, 300);
-
-            }, 3000);
-        });
-    });
-    </script>
+    
+    @include('partials.footer')
 
 </body>
 </html>

@@ -1,73 +1,73 @@
 @extends('layouts.admin')
 
+@section('title', 'Detail User - E&Dgarage')
+@section('header-title', 'Detail Pengguna')
+
 @section('content')
-<div class="mb-6 flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-gray-800">Detail Pengguna</h1>
-    <a href="{{ route('admin.users.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">Kembali</a>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">Informasi Pengguna</h2>
-        <dl class="space-y-4">
-            <div>
-                <dt class="text-sm font-medium text-gray-500">Nama</dt>
-                <dd class="mt-1 text-lg text-gray-900">{{ $user->name }}</dd>
-            </div>
-            <div>
-                <dt class="text-sm font-medium text-gray-500">Email</dt>
-                <dd class="mt-1 text-lg text-gray-900">{{ $user->email }}</dd>
-            </div>
-            <div>
-                <dt class="text-sm font-medium text-gray-500">Nomor HP</dt>
-                <dd class="mt-1 text-lg text-gray-900">{{ $user->nomor_hp ?? '-' }}</dd>
-            </div>
-            <div>
-                <dt class="text-sm font-medium text-gray-500">Alamat</dt>
-                <dd class="mt-1 text-gray-900">{{ $user->alamat ?? '-' }}</dd>
-            </div>
-            <div>
-                <dt class="text-sm font-medium text-gray-500">Terdaftar</dt>
-                <dd class="mt-1 text-gray-900">{{ $user->created_at->format('d M Y') }}</dd>
-            </div>
-        </dl>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">Riwayat Transaksi</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Motor</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Tanggal</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Status</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($transactions as $transaction)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2">{{ $transaction->product->nama_motor }}</td>
-                        <td class="px-4 py-2">{{ $transaction->tanggal_transaksi->format('d M Y') }}</td>
-                        <td class="px-4 py-2">
-                            <span class="px-2 py-1 rounded-full text-xs {{ $transaction->status_pembayaran === 'success' ? 'bg-green-100 text-green-800' : ($transaction->status_pembayaran === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
-                                {{ ucfirst($transaction->status_pembayaran) }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-2">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">Belum ada transaksi</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+    <div class="max-w-3xl mx-auto w-full">
+        
+        <div class="mb-6">
+            <a href="{{ route('admin.users.index') }}" class="text-gray-400 hover:text-white flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Daftar User
+            </a>
         </div>
-        <div class="mt-4">{{ $transactions->links() }}</div>
+
+        <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
+            
+            <div class="px-6 py-6 border-b border-gray-700 flex items-center bg-gray-800/50">
+                <div class="h-16 w-16 rounded-full bg-red-600 flex items-center justify-center text-2xl font-bold text-white mr-4 shadow-lg">
+                    {{ substr($user->name, 0, 1) }}
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">{{ $user->name }}</h2>
+                    <p class="text-gray-400 text-sm">{{ $user->email }}</p>
+                </div>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div>
+                    <label class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Role Akses</label>
+                    <div class="mt-1">
+                        @if($user->role === 'admin' || $user->is_admin)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-900/30 text-red-400 border border-red-800">
+                                Administrator
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900/30 text-blue-400 border border-blue-800">
+                                User Biasa
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Nomor HP</label>
+                    <p class="text-lg font-medium mt-1 text-white">{{ $user->nomor_hp ?? '-' }}</p>
+                </div>
+
+                <div>
+                    <label class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Bergabung Sejak</label>
+                    <p class="text-lg font-medium mt-1 text-white">{{ $user->created_at->format('d F Y') }}</p>
+                </div>
+
+                <div>
+                    <label class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Total Transaksi</label>
+                    <p class="text-lg font-medium mt-1 text-white">
+                        {{ $transactionCount ?? 0 }} <span class="text-sm text-gray-400">Kali Order</span>
+                    </p>
+                </div>
+                
+                <div class="col-span-2">
+                    <label class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Alamat Lengkap</label>
+                    <div class="mt-2 p-4 bg-gray-700/30 rounded-lg border border-gray-600 text-gray-300 leading-relaxed">
+                        {{ $user->alamat ?? 'User ini belum melengkapi data alamat.' }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-</div>
 @endsection
-
-

@@ -9,65 +9,85 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function show()
+    // 1. TAMPILKAN HALAMAN PROFIL
+    public function index()
     {
         $user = Auth::user();
-        $transactions = $user->transactions()->with('product')->latest()->paginate(10);
-        return view('admin.profile.show', compact('user', 'transactions'));
+        // Ambil riwayat transaksi user
+        $transactions = $user->transactions()->with('product')->latest()->get();
+        
+        return view('user.profile', compact('user', 'transactions'));
     }
 
-    public function edit()
-    {
-        $user = Auth::user();
-        return view('admin.profile.edit', compact('user'));
-    }
-
+    // 2. UPDATE DATA PROFIL
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'nomor_hp' => 'nullable|string|max:20',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'nomor_hp' => 'required|string|max:20',
             'alamat' => 'nullable|string',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Handle upload foto profil
+        // Update Foto jika ada upload baru
         if ($request->hasFile('foto_profil')) {
-            // Hapus foto lama
+            // Hapus foto lama jika ada (selain default)
             if ($user->foto_profil) {
                 Storage::disk('public')->delete($user->foto_profil);
             }
-            
-            $validated['foto_profil'] = $request->file('foto_profil')->store('profiles', 'public');
+            // Simpan foto baru
+            $path = $request->file('foto_profil')->store('profiles', 'public');
+            $user->foto_profil = $path;
         }
 
-        $user->update($validated);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->nomor_hp = $request->nomor_hp;
+        $user->alamat = $request->alamat;
+        $user->save();
 
-        return redirect()->route('admin.profile.show')
-            ->with('success', 'Profil berhasil diperbarui!');
+        return back()->with('success', 'Profil berhasil diperbarui!');
     }
 
-    public function updatePassword(Request $request)
+    // 3. GANTI PASSWORD
+    public function changePassword(Request $request)
     {
         $request->validate([
             'current_password' => 'required',
-            'password' => 'required|string|min:8|confirmed',
+            'new_password' => 'required|min:6|confirmed',
         ]);
 
-        $user = Auth::user();
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Password saat ini tidak cocok.']);
+        if (!Hash::check($request->current_password, Auth::user()->password)) {
+            return back()->withErrors(['current_password' => 'Password lama salah!']);
         }
 
-        $user->update([
-            'password' => Hash::make($request->password),
+        Auth::user()->update([
+            'password' => Hash::make($request->new_password)
         ]);
 
-        return redirect()->route('admin.profile.show')
-            ->with('success', 'Password berhasil diubah!');
+        return back()->with('success', 'Password berhasil diganti!');
+    }
+
+    // 4. HAPUS AKUN (Fitur Tambahan)
+    public function deleteAccount(Request $request)
+    {
+        $user = Auth::user();
+
+        // Hapus foto profil fisik agar tidak nyampah
+        if ($user->foto_profil) {
+            Storage::disk('public')->delete($user->foto_profil);
+        }
+
+        // Logout & Hapus
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Akun Anda telah dihapus permanen.');
     }
 }

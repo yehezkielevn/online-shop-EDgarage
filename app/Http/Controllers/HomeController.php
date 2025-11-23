@@ -9,12 +9,17 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // Query awal
-        $query = Product::with('images')->latest();
+        // 1. QUERY DATA
+        // Kita ambil produk yang statusnya 'tersedia' (belum terjual)
+        // Hapus 'with(images)' karena kita pakai JSON column 'gambar'
+        $query = Product::latest(); 
+        // Jika kamu sudah buat kolom 'status' di database, pakai baris ini:
+        // $query = Product::where('status', 'tersedia')->latest();
 
-        // === FILTER ===
+        // === FILTER PENCARIAN ===
         if ($request->search) {
-            $query->where('nama', 'LIKE', "%" . $request->search . "%");
+            // PERBAIKAN: Kolom di database adalah 'nama_motor', bukan 'nama'
+            $query->where('nama_motor', 'LIKE', "%" . $request->search . "%");
         }
 
         if ($request->merek) {
@@ -29,9 +34,10 @@ class HomeController extends Controller
             $query->where('tipe', $request->tipe);
         }
 
-        $products = $query->get();
+        // Ambil data dengan Pagination (12 per halaman)
+        $products = $query->paginate(12);
 
-        // Dropdown
+        // === DATA DROPDOWN (Untuk Filter di View) ===
         $brands = Product::select('merek')->distinct()->whereNotNull('merek')->pluck('merek');
 
         $years = Product::select('tahun')

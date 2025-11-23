@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
-/* ====== Custom minimal biar mirip versi lama ====== */
-
-/* Font default agar sama seperti sebelumnya */
+/* ===========================================
+   BASE (bersih, tidak override body)
+=========================================== */
 @layer base {
-  body {
-    @apply font-sans text-gray-800 bg-white;
-  }
+  /* Tidak mengubah body, karena body sudah diatur di layout:
+     <body class="bg-black text-white font-poppins"> */
 }
 
-/* Navbar link animation */
+/* ===========================================
+   COMPONENTS → Navbar underline animation
+=========================================== */
 @layer components {
   .nav-link {
-    @apply relative inline-block pb-1 text-gray-700 transition-colors duration-300 ease-in-out;
+    @apply relative inline-block pb-1 text-gray-300 transition-colors duration-300 ease-in-out;
   }
 
   .nav-link::after {

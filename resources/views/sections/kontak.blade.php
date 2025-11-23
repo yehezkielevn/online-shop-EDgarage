@@ -10,7 +10,7 @@
     - Accessibility features
 -->
 
-<section id="kontak" class="py-20 lg:py-28 bg-white">
+<section id="kontak" class="py-20 lg:py-28 bg-gray-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->

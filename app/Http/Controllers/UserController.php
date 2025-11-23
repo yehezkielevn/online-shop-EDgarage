@@ -7,15 +7,22 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    // 1. TAMPILKAN DAFTAR USER
     public function index()
     {
-        $users = User::where('is_admin', false)->latest()->paginate(15);
+        // Ambil semua user terbaru, 10 per halaman
+        $users = User::latest()->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
-    public function show(User $user)
+    // 2. TAMPILKAN DETAIL USER (Hanya Lihat)
+    public function show($id)
     {
-        $transactions = $user->transactions()->with('product')->latest()->paginate(10);
-        return view('admin.users.show', compact('user', 'transactions'));
+        $user = User::findOrFail($id);
+        
+        // Hitung transaksi user tersebut (jika ada relasi)
+        $transactionCount = $user->transactions ? $user->transactions->count() : 0;
+
+        return view('admin.users.show', compact('user', 'transactionCount'));
     }
 }

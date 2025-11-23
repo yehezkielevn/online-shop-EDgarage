@@ -1,53 +1,65 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// CONTROLLERS
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KatalogController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
-
-// ======== HALAMAN USER ========
-
-// Homepage + katalog (filter berada di bagian bawah homepage)
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Detail produk
 Route::get('/katalog/{id}', [KatalogController::class, 'show'])->name('katalog.show');
 
+/*
+|--------------------------------------------------------------------------
+| AUTHENTICATION
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+});
 
-// ======== AUTH ========
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+/*
+|--------------------------------------------------------------------------
+| ADMIN PANEL
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->as('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::resource('products', ProductController::class);
+        Route::resource('users', UserController::class)->only(['index', 'show']);
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::put('/transactions/{id}', [TransactionController::class, 'update'])->name('transactions.update');
+        Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+        Route::get('/activity-logs', [AdminController::class, 'activityLogs'])->name('activity-logs');
+    });
 
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
-
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-
-// ======== ADMIN (HARUS LOGIN) ========
-
+/*
+|--------------------------------------------------------------------------
+| USER PROFIL (Edit & Hapus Akun Saja)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
-
-    // Dashboard admin
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-
-    // CRUD Produk
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
-
-    Route::get('/products/edit/{id}', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
-
-    Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
+    Route::delete('/profile/delete', [ProfileController::class, 'deleteAccount'])->name('profile.delete');
 });
