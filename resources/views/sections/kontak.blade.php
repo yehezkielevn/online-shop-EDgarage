@@ -46,8 +46,8 @@
                             </div>
                             <div>
                                 <h4 class="text-white font-semibold">WhatsApp</h4>
-                                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-red-400 transition-colors" aria-label="Chat via WhatsApp">
-                                    +62 812-3456-7890
+                                <a href="https://wa.me/+62 856-4089-8584" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-red-400 transition-colors" aria-label="Chat via WhatsApp">
+                                    +62 856-4089-8584
                                 </a>
                             </div>
                         </div>
@@ -63,8 +63,8 @@
                             </div>
                             <div>
                                 <h4 class="text-white font-semibold">Email</h4>
-                                <a href="mailto:info@edgarage.com" class="text-gray-300 hover:text-red-400 transition-colors" aria-label="Kirim email ke E&Dgarage">
-                                    info@edgarage.com
+                                <a href="mailto:edgarageinfo" class="text-gray-300 hover:text-red-400 transition-colors" aria-label="Kirim email ke E&Dgarage">
+                                    edgarageinfo@gmail.com
                                 </a>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                             </div>
                             <div>
                                 <h4 class="text-white font-semibold">Alamat</h4>
-                                <p class="text-gray-300">Jl. Merdeka No. 42, Jakarta 12345, Indonesia</p>
+                                <p class="text-gray-300"> JL.Tampomas dalam VII No.28,Semarang.</p>
                             </div>
                         </div>
 
@@ -89,7 +89,7 @@
 
                     <!-- WhatsApp Button -->
                     <a 
-                        href="https://wa.me/6281234567890?text=Halo%20E%26Dgarage%2C%20saya%20ingin%20menanyakan%20tentang%20motor%20bekas%20anda." 
+                        href="https://wa.me/6285640898584?text=Halo%20E%26Dgarage%2C%20saya%20ingin%20menanyakan%20tentang%20motor%20bekas%20anda." 
                         target="_blank" 
                         rel="noopener noreferrer"
                         class="w-full inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200 mb-8"
@@ -126,7 +126,7 @@
             <!-- Right: Map -->
             <div class="relative h-96 lg:h-full min-h-96 rounded-2xl overflow-hidden shadow-xl">
                 <a 
-                    href="https://maps.google.com/?q=-6.2088,106.8456" 
+                    href="https://maps.app.goo.gl/V7paFCyowSpjg3cx6" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="block w-full h-full group relative"
@@ -134,8 +134,8 @@
                 >
                     <!-- Static Map Image -->
                     <img 
-                        src="https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-6.2088,106.8456,12/600x600@2x?access_token=pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjazAwMDAwIn0.demo" 
-                        alt="Lokasi E&Dgarage - Jl. Merdeka No. 42, Jakarta" 
+                        src="https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/110.4205,-6.9917,14/600x600@2x?access_token=pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjazAwMDAwIn0.demo"
+                        alt="Lokasi E&Dgarage - JL.Tampomas dalam VII No.28,Semarang" 
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         loading="lazy"
                     >

@@ -49,21 +49,21 @@
           <li>
             <div class="flex items-start gap-2">
               <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 19l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-              <span class="leading-tight">Jl. Merdeka No.42, Jakarta</span>
+              <span class="leading-tight">JL. Tampomas dalam VII No.28, Semarang</span>
             </div>
           </li>
 
           <li>
             <div class="flex items-start gap-2">
               <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-              <a href="mailto:info@edgarage.com" class="hover:text-white">info@edgarage.com</a>
+              <a href="mailto:info@edgarage.com" class="hover:text-white">edgarageinfo@gmail.com</a>
             </div>
           </li>
 
           <li>
             <div class="flex items-start gap-2">
               <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h2A1.5 1.5 0 017 3.5v2A1.5 1.5 0 015.5 7H5v1c0 3.866 3.134 7 7 7h1v.5A1.5 1.5 0 0113.5 17h-2A1.5 1.5 0 0110 15.5v-2A1.5 1.5 0 0111.5 12h2A1.5 1.5 0 0115 13.5V15h.5A1.5 1.5 0 0117 16.5v1A1.5 1.5 0 0115.5 19h-11A1.5 1.5 0 013 17.5v-14z"></path></svg>
-              <a href="https://wa.me/6281234567890" class="hover:text-white">+62 812-3456-7890</a>
+              <a href="https://wa.me/+6285640898584" class="hover:text-white">+62 812-3456-7890</a>
             </div>
           </li>
         </ul>
