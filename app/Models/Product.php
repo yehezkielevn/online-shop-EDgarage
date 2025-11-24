@@ -24,6 +24,7 @@ class Product extends Model
         'status_pajak',
         'minus',
         'gambar',
+        'status',   // tersedia, pending_checkout, terjual
     ];
 
     protected $casts = [
@@ -42,5 +43,18 @@ class Product extends Model
             $urls[] = asset('images/no-image.png');
         }
         return $urls;
+    }
+
+    /**
+     * Check if product is in current user's cart
+     */
+    public function isInCart()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return \App\Models\Cart::where('user_id', auth()->id())
+                               ->where('product_id', $this->id)
+                               ->exists();
     }
 }

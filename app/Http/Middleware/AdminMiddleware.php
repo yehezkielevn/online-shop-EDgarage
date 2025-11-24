@@ -11,17 +11,21 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Cek apakah user sedang login
         if (!Auth::check()) {
             return redirect('/login');
         }
 
         $user = Auth::user();
 
-        // Logika Pengecekan Kuat (Sama seperti Controller)
-        if ($user->is_admin || strtolower(trim($user->role)) === 'admin') {
+        // PENGECEKAN KETAT: KEDUA kondisi harus terpenuhi (AND, bukan OR)
+        // User harus memiliki is_admin=true DAN role='admin' untuk akses admin
+        if ($user->is_admin === true && strtolower(trim($user->role ?? '')) === 'admin') {
             return $next($request);
         }
 
-        return redirect('/')->with('error', 'Akses Ditolak: Anda bukan Admin.');
+        // Tolak akses dengan 403 Forbidden (lebih aman dari redirect)
+        // Ini akan memblokir user biasa yang mencoba akses admin setelah login di tab berbeda
+        abort(403, 'Akses Ditolak: Anda bukan Admin.');
     }
 }

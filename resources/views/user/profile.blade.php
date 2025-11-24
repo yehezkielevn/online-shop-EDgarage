@@ -104,20 +104,27 @@
                 @if($transactions->count() > 0)
                     <div class="space-y-4">
                         @foreach($transactions as $trx)
-                            <div class="flex items-center justify-between p-4 bg-neutral-800/50 rounded-xl border border-neutral-800 hover:border-neutral-600 transition">
-                                <div>
-                                    <h4 class="text-white font-bold">{{ $trx->product->nama_motor ?? 'Produk Dihapus' }}</h4>
+                            <a href="{{ route('history.bukti', $trx->id) }}" class="flex items-center justify-between p-4 bg-neutral-800/50 rounded-xl border border-neutral-800 hover:border-red-600 hover:bg-neutral-800 transition group no-underline">
+                                <div class="flex-1">
+                                    <h4 class="text-white font-bold group-hover:text-red-500 transition">{{ $trx->product->nama_motor ?? 'Produk Dihapus' }}</h4>
                                     <p class="text-xs text-gray-400">{{ $trx->created_at->format('d M Y, H:i') }}</p>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-red-500 font-bold mb-1">Rp {{ number_format($trx->amount) }}</p>
-                                    <span class="text-xs px-2 py-1 rounded 
-                                        {{ $trx->status_pembayaran == 'success' ? 'bg-green-900/30 text-green-400 border border-green-800' : 
-                                          ($trx->status_pembayaran == 'pending' ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-800' : 'bg-red-900/30 text-red-400 border border-red-800') }}">
-                                        {{ ucfirst($trx->status_pembayaran) }}
-                                    </span>
+                                <div class="text-right flex items-center gap-3">
+                                    <div>
+                                        <p class="text-red-500 font-bold mb-1">Rp {{ number_format($trx->total_price, 0, ',', '.') }}</p>
+                                        @if($trx->status_pembayaran == 'pending')
+                                            <span class="text-xs px-2 py-1 rounded bg-yellow-900/30 text-yellow-400 border border-yellow-800">Pending</span>
+                                        @elseif($trx->status_pembayaran == 'lunas')
+                                            <span class="text-xs px-2 py-1 rounded bg-green-900/30 text-green-400 border border-green-800">Lunas</span>
+                                        @else
+                                            <span class="text-xs px-2 py-1 rounded bg-red-900/30 text-red-400 border border-red-800">Ditolak</span>
+                                        @endif
+                                    </div>
+                                    <svg class="w-5 h-5 text-gray-500 group-hover:text-red-500 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 @else

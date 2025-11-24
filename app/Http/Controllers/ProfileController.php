@@ -90,4 +90,22 @@ class ProfileController extends Controller
 
         return redirect('/')->with('success', 'Akun Anda telah dihapus permanen.');
     }
+
+    // 5. HALAMAN RIWAYAT PEMBELIAN
+    public function history()
+    {
+        $user = Auth::user();
+        // Ambil riwayat transaksi user dengan product details
+        $transactions = $user->transactions()->with('product')->latest()->get();
+        
+        return view('user.history', compact('transactions'));
+    }
+
+    // 6. VIEW BUKTI TRANSFER
+    public function viewBukti($transactionId)
+    {
+        $transaction = Auth::user()->transactions()->findOrFail($transactionId);
+        
+        return view('user.view-bukti', compact('transaction'));
+    }
 }

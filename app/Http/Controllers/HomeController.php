@@ -11,10 +11,7 @@ class HomeController extends Controller
     {
         // 1. QUERY DATA
         // Kita ambil produk yang statusnya 'tersedia' (belum terjual)
-        // Hapus 'with(images)' karena kita pakai JSON column 'gambar'
-        $query = Product::latest(); 
-        // Jika kamu sudah buat kolom 'status' di database, pakai baris ini:
-        // $query = Product::where('status', 'tersedia')->latest();
+        $query = Product::where('status', 'tersedia')->latest();
 
         // === FILTER PENCARIAN ===
         if ($request->search) {

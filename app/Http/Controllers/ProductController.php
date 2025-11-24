@@ -11,7 +11,8 @@ class ProductController extends Controller
     // 1. TAMPILKAN DAFTAR PRODUK
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        // Hanya tampilkan produk yang belum terjual (tersedia atau pending_checkout)
+        $products = Product::where('status', '!=', 'terjual')->latest()->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 

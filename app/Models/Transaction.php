@@ -15,9 +15,11 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'product_id',
-        'amount',             // Harga Deal / Nominal
-        'status_pembayaran',  // pending, success, failed
+        'total_price',
+        'metode_pembayaran',
+        'status_pembayaran',  // pending, lunas, ditolak
         'tanggal_transaksi',
+        'bukti_transfer',
         'catatan',
     ];
 
